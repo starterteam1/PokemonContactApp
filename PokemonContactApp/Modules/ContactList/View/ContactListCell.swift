@@ -11,25 +11,16 @@ final class ContactListCell: UITableViewCell {
     
     static let id = "ContactListCell"
     
-    private let contactImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.layer.cornerRadius = 25
-        imageView.layer.borderWidth = 1
-        imageView.layer.borderColor = UIColor.systemGray.cgColor
-        imageView.layer.masksToBounds = true
-        return imageView
-    }()
+    private let contactImageView = UIImageView().then {
+        $0.contentMode = .scaleAspectFit
+        $0.layer.borderWidth = 2
+        $0.layer.borderColor = UIColor.systemGray.cgColor
+        $0.layer.masksToBounds = true
+    }
     
-    private let nameLabel: UILabel = {
-        let label = UILabel()
-        return label
-    }()
+    private let nameLabel = UILabel().then { _ in }
     
-    private let numberLabel: UILabel = {
-        let label = UILabel()
-        return label
-    }()
+    private let numberLabel = UILabel().then { _ in }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -47,7 +38,7 @@ final class ContactListCell: UITableViewCell {
         ].forEach { contentView.addSubview($0)}
         
         contactImageView.snp.makeConstraints {
-            $0.size.equalTo(50)
+            $0.size.equalTo(contentView.snp.height).multipliedBy(0.7)
             $0.leading.equalToSuperview().inset(40)
             $0.centerY.equalToSuperview()
         }
@@ -66,5 +57,10 @@ final class ContactListCell: UITableViewCell {
     public func configureCell() {
         nameLabel.text = "김이든"
         numberLabel.text = "010-0000-0000"
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        contactImageView.layer.cornerRadius = contactImageView.bounds.width / 2
     }
 }
