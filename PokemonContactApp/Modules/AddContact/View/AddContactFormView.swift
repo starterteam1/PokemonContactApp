@@ -15,7 +15,7 @@ final class AddContactFormView: UIView {
     
     weak var delegate: AddContactFormViewDelegate?
     
-    private let randomImageView = UIImageView().then {
+    let randomImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFit
         $0.layer.borderWidth = 4
         $0.layer.borderColor = UIColor.systemGray.cgColor
@@ -85,10 +85,6 @@ final class AddContactFormView: UIView {
     
     @objc private func buttonTapped() {
         delegate?.didTapGenerateRandomImageButton()
-    }
-    
-    func setImage(_ image: UIImage) {
-        randomImageView.image = image
     }
     
     override func layoutSubviews() {

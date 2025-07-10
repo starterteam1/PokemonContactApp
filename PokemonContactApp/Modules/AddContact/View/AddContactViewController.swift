@@ -10,13 +10,13 @@ import UIKit
 class AddContactViewController: UIViewController {
     
     private let addContactFormView = AddContactFormView()
-    private let imageService = ImageService()
+    private let addContactViewModel = AddContactViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
         addContactFormView.delegate = self
-        bindViewModel()
+        addContactViewModel.delegate = self
     }
     
     private func configureUI() {
@@ -39,21 +39,24 @@ class AddContactViewController: UIViewController {
         }
     }
     
-    private func bindViewModel() {
-        imageService.onImageFetched = { [weak self] image in
-            DispatchQueue.main.async {
-                self?.addContactFormView.setImage(image)
-            }
-        }
-    }
-    
     @objc private func didTapApply() {
         
     }
 }
-
+//MARK: - View Delegate
 extension AddContactViewController: AddContactFormViewDelegate {
     func didTapGenerateRandomImageButton() {
-        imageService.fetchRandomPokemonImage()
+        addContactViewModel.fetchRandomPokemonImage()
+    }
+}
+
+//MARK: - ViewModel Delegate
+extension AddContactViewController: AddContactViewModelDelegate {
+    func didFetchPokemonImage(_ data: Data) {
+        if let image = UIImage(data: data) {
+            DispatchQueue.main.async {
+                self.addContactFormView.randomImageView.image = image
+            }
+        }
     }
 }
