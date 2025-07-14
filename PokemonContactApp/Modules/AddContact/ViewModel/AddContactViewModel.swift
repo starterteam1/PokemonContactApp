@@ -10,12 +10,31 @@
 import Foundation
 import Alamofire
 
+enum ContactMode {
+    case create
+    case detail(model: ContactModel)
+}
+
 protocol AddContactViewModelDelegate: AnyObject {
     func didFetchPokemonImage(_ data: Data)
 }
 
 final class AddContactViewModel {
     weak var delegate: AddContactViewModelDelegate?
+    private let coreDataManage = CoreDataManage()
+    
+    let mode: ContactMode
+    
+    var contact: ContactModel? {
+        switch mode {
+        case .create: return nil
+        case .detail(let model): return model
+        }
+    }
+    
+    init(mode: ContactMode) {
+        self.mode = mode
+    }
 }
 
 //MARK: - 포켓몬 이미지 데이터 요청
@@ -51,9 +70,22 @@ extension AddContactViewModel {
             switch response.result {
             case .success(let data):
                 self.delegate?.didFetchPokemonImage(data)
+                
             case .failure(let error):
                 print("이미지 데이터 실패: \(error)")
             }
+        }
+    }
+}
+
+//MARK: - CoreData
+extension AddContactViewModel {
+    func saveContact(image: Data, name: String, phoneNumber: String) {
+        switch mode {
+        case .create:
+            coreDataManage.createData(image: image, name: name, phoneNumber: phoneNumber)
+        case .detail(let model):
+            coreDataManage.updateData(id: model.id, name: name, phoneNumber: phoneNumber, image: image)
         }
     }
 }

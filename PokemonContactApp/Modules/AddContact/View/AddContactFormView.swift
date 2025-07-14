@@ -15,6 +15,8 @@ final class AddContactFormView: UIView {
     
     weak var delegate: AddContactFormViewDelegate?
     
+    private var didApplyCornerRadius = false
+    
     let randomImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFit
         $0.layer.borderWidth = 4
@@ -26,12 +28,12 @@ final class AddContactFormView: UIView {
         $0.setTitle("랜덤 이미지 생성", for: .normal)
     }
     
-    private let nameTextField = UITextField().then {
+    let nameTextField = UITextField().then {
         $0.placeholder = "이름"
         $0.borderStyle = .roundedRect
     }
     
-    private let numberTextField = UITextField().then {
+    let numberTextField = UITextField().then {
         $0.placeholder = "전화번호"
         $0.borderStyle = .roundedRect
     }
@@ -89,7 +91,11 @@ final class AddContactFormView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        randomImageView.layer.cornerRadius = randomImageView.bounds.width / 2
+
+        if !didApplyCornerRadius {
+            randomImageView.layer.cornerRadius = randomImageView.bounds.width / 2
+            didApplyCornerRadius = true
+        }
     }
     
 }

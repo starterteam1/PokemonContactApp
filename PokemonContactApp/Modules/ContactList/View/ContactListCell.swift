@@ -54,13 +54,21 @@ final class ContactListCell: UITableViewCell {
         }
     }
     
-    public func configureCell() {
-        nameLabel.text = "김이든"
-        numberLabel.text = "010-0000-0000"
+    public func configureCell(with model: ContactModel) {
+        if let image = model.image {
+            contactImageView.image = UIImage(data: image)
+        }
+        nameLabel.text = model.name
+        numberLabel.text = model.phoneNumber
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         contactImageView.layer.cornerRadius = contactImageView.bounds.width / 2
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        contactImageView.image = nil
     }
 }
